@@ -1,0 +1,19 @@
+---
+title: "terremotos"
+author: "Natan Duarte"
+---
+
+# Análise anual de terremotos
+
+A análise de terremotos é de vital importância para a compreensão da dinâmica da Terra e para a mitigação dos riscos associados a esses eventos naturais. Ela permite aos cientistas estudar as forças tectônicas que causam os terremotos, mapear a localização de falhas geológicas ativas e prever a probabilidade de futuros terremotos. Além disso, a análise de terremotos ajuda na elaboração de normas de construção mais seguras, na preparação de planos de emergência eficazes e na educação do público sobre como reagir durante um terremoto, contribuindo assim para a redução de danos e perdas de vidas.
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+install.packages(c("devtools"))
+devtools::install_github("ldurazo/kaggler")
+library(readr)
+library(kaggler)
+```
