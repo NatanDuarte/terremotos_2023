@@ -3,6 +3,7 @@
 .Rapp.history
 
 kaggle.json
+data
 
 # Session Data files
 .RData
