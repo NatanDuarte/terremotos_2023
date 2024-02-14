@@ -5,6 +5,10 @@
 kaggle.json
 data
 
+*.html
+
+terremotos_files/*
+
 # Session Data files
 .RData
 .RDataTmp
