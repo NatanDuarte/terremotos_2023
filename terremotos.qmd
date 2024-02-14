@@ -8,12 +8,103 @@ author: "Natan Duarte"
 A análise de terremotos é de vital importância para a compreensão da dinâmica da Terra e para a mitigação dos riscos associados a esses eventos naturais. Ela permite aos cientistas estudar as forças tectônicas que causam os terremotos, mapear a localização de falhas geológicas ativas e prever a probabilidade de futuros terremotos. Além disso, a análise de terremotos ajuda na elaboração de normas de construção mais seguras, na preparação de planos de emergência eficazes e na educação do público sobre como reagir durante um terremoto, contribuindo assim para a redução de danos e perdas de vidas.
 
 ```{r}
+#| echo: false
+#| warning: false
+
 library(tidyverse)
 ```
 
 ```{r}
+#| echo: false
+#| warning: false
+
 install.packages(c("devtools"))
 devtools::install_github("ldurazo/kaggler")
 library(readr)
 library(kaggler)
+library(here)
 ```
+
+```{r}
+#| echo: false
+
+DATASET_NAME = "mustafakeser4/earthquakes-2023-global"
+ZIP_NAME = "temp.zip"
+DIR_NAME = "data"
+DATASET_FILE_NAME = "earthquakes_2023_global.csv"
+
+ZIP_PATH = here::here(DIR_NAME, ZIP_NAME)
+CSV_PATH = here::here(DIR_NAME, DATASET_FILE_NAME)
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| output: false
+#| include: false
+
+kgl_auth(creds_file = 'kaggle.json')
+
+response <- kgl_datasets_download_all(owner_dataset = DATASET_NAME)
+
+download.file(response[["url"]], ZIP_PATH, mode="wb")
+unzip(ZIP_PATH, exdir = DIR_NAME, overwrite = TRUE)
+
+if (file.exists(ZIP_PATH))
+  file.remove(ZIP_PATH)
+
+```
+
+Vamos carregar os dados baixados e observar algumas amostras:
+
+```{r}
+earthquake_data <- read_csv(CSV_PATH)
+
+sample(earthquake_data)
+```
+
+O conjunto de dados possui um total de `r nrow(earthquake_data)` eventos sismicos que ocorreram entre `r min(earthquake_data$time, na.rm = TRUE)` e `r max(earthquake_data$time, na.rm = TRUE)`.
+
+```{r}
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(ggplot2)
+library(ggthemes)
+library(rvest)
+library(gt)
+library(ggrepel)
+library(lubridate)
+library(flextable)
+
+```
+
+```{r}
+world <- rnaturalearth::ne_countries(returnclass = "sf")
+
+flextable::flextable(world)
+
+plot <- ggplot(data = world)
+plot <- plot + geom_sf(aes(fill = sovereignt), alpha = 0.4)
+plot <- plot + ggthemes::theme_map()
+plot <- plot + theme(legend.position = "none")
+plot <- plot + scale_fill_viridis_d()
+plot
+
+```
+
+------------------------------------------------------------------------
+
+<https://medium.com/mcd-unison/how-to-use-kaggle-api-to-download-datasets-in-r-312179c7a99c>
+
+<https://www.kaggle.com/datasets/mustafakeser4/earthquakes-2023-global/data>
+
+<https://r-charts.com/spatial/interactive-maps-leaflet/>
+
+<https://rviews.rstudio.com/2019/10/09/building-interactive-world-maps-in-shiny/>
+
+<https://plotly-r.com/maps.html>
+
+<https://www.youtube.com/watch?v=ThDzcBhbyQI>
+
+<https://quarto.org/docs/computations/execution-options.html>
